@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class DocCommentSection(str, Enum):
+class Section(str, Enum):
     SUMMARY = ''
     PARAM = '@param'
     RETURN = '@return'
@@ -10,3 +10,5 @@ class DocCommentSection(str, Enum):
     EXAMPLE = '@example'
     README = '@readme'
     NAMESPACE = '@namespace'
+    LINK = '@link'
+    SEE = '@see'
