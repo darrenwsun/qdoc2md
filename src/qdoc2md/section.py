@@ -12,3 +12,4 @@ class Section(str, Enum):
     NAMESPACE = '@namespace'
     LINK = '@link'
     SEE = '@see'
+    DATATYPE = '@datatype'

@@ -71,7 +71,10 @@ class Parser(object):
                         index_left_brace, index_right_brace = line.find("{"), line.find("}")
                         datatype = line[index_left_brace+1:index_right_brace]
                         desc = line[index_right_brace+1:]
-                        doc_comment[Section.THROWS] = Param("", datatype, desc)
+                        if Section.THROWS not in doc_comment:
+                            doc_comment[Section.THROWS] = [Param('', datatype, desc)]
+                        else:
+                            doc_comment[Section.THROWS].append(Param('', datatype, desc))
 
                     elif line.startswith(Section.DEPRECATED):
                         doc_comment[Section.DEPRECATED] = True
@@ -84,6 +87,14 @@ class Parser(object):
                         current_section = Section.SEE
                         line = line.removeprefix(Section.SEE).lstrip()
                         doc_comment[Section.SEE] = [line]
+
+                    elif line.startswith(Section.DATATYPE):
+                        current_section = Section.DATATYPE
+                        line = line.removeprefix(Section.DATATYPE).lstrip()
+                        index_left_brace, index_right_brace = line.find("{"), line.find("}")
+                        datatype = line[index_left_brace+1:index_right_brace]
+                        doc_comment[Section.DATATYPE] = datatype
+
                     else:       # Continuation of the current section
                         match current_section:
                             case Section.README:
@@ -91,11 +102,11 @@ class Parser(object):
                             case Section.SUMMARY:
                                 doc_comment[current_section].append(line)
                             case Section.PARAM:
-                                doc_comment[current_section][-1].description += line
+                                doc_comment[current_section][-1].description += f'\n{line}'
                             case Section.RETURN:
-                                doc_comment[current_section].description += line
+                                doc_comment[current_section].description += f'\n{line}'
                             case Section.THROWS:
-                                doc_comment[current_section].description += line
+                                doc_comment[current_section][-1].description += f'\n{line}'
                             case Section.EXAMPLE:
                                 doc_comment[current_section].append(line)
                             case Section.SEE:
@@ -117,27 +128,24 @@ class Parser(object):
                         md_doc.new_paragraph("Deprecated", bold_italics_code="bi")
                         md_doc.write('\n')
                     md_doc.new_paragraph('\n'.join(doc_comment[Section.SUMMARY]))
+                    if Section.DATATYPE in doc_comment:
+                        md_doc.new_paragraph('Datatype:', bold_italics_code="b")
+                        md_doc.write(f' {doc_comment[Section.DATATYPE]}')
+                        md_doc.write('\n')
                     if Section.PARAM in doc_comment:
                         params = doc_comment[Section.PARAM]
                         md_doc.new_paragraph("Parameter:", bold_italics_code="b")
-                        param_list = ["Name", "Type", "Description"]
-                        param_list.extend(itertools.chain.from_iterable([param.name, param.datatype, param.description] for param in params))
                         md_doc.write('\n')
-                        md_doc.new_table(columns=3, rows=len(params)+1, text=param_list, text_align="left")
+                        for param in params:
+                            md_doc.write(f'1. `{param.name}` ({param.datatype}): {param.description}\n')
                     if Section.RETURN in doc_comment:
-                        md_doc.new_paragraph("Returns:", bold_italics_code="b")
-                        md_doc.write('\n')
-                        md_doc.new_table(columns=2,
-                                         rows=2,
-                                         text=["Type", "Description", doc_comment[Section.RETURN].datatype, doc_comment[Section.RETURN].description],
-                                         text_align="left")
+                        md_doc.new_paragraph("Returns", bold_italics_code="b")
+                        md_doc.write(f' ({doc_comment[Section.RETURN].datatype}): {doc_comment[Section.RETURN].description}\n')
                     if Section.THROWS in doc_comment:
                         md_doc.new_paragraph("Throws:", bold_italics_code="b")
                         md_doc.write('\n')
-                        md_doc.new_table(columns=2,
-                                         rows=2,
-                                         text=["Type", "Description", doc_comment[Section.THROWS].datatype, doc_comment[Section.THROWS].description],
-                                         text_align="left")
+                        for throws in doc_comment[Section.THROWS]:
+                            md_doc.write(f'1. {throws.datatype}: {throws.description}\n')
                     if Section.EXAMPLE in doc_comment and doc_comment[Section.EXAMPLE]:
                         md_doc.new_paragraph("Example:", bold_italics_code="b")
                         md_doc.insert_code(code='\n'.join(doc_comment[Section.EXAMPLE]), language="q")

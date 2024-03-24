@@ -41,6 +41,9 @@ class Generator(object):
                         text = text.replace(
                             f'{Section.LINK.value}{{{keyword}}}',
                             f'[{keyword}]({'' if path == doc.path else Path(os.path.relpath(path, start=doc.path)).as_posix()}#{keyword.replace('.', '')})')
+                    else:
+                        text = text.replace(f'{Section.LINK.value}{{{keyword}}}', keyword)
+
                 match = re.search(pattern, text)
             doc.md_doc.file_data_text = text
 
