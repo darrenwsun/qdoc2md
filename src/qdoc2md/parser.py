@@ -42,7 +42,7 @@ class Parser(object):
                     elif line.startswith(Section.README):
                         current_section = Section.README
                         line = line.removeprefix(Section.README).lstrip()
-                        doc_comment[Section.README] = line
+                        doc_comment[Section.README] = [line]
 
                     elif line.startswith(Section.PARAM):
                         current_section = Section.PARAM
@@ -87,9 +87,9 @@ class Parser(object):
                     else:       # Continuation of the current section
                         match current_section:
                             case Section.README:
-                                doc_comment[current_section] += line
+                                doc_comment[current_section].append(line)
                             case Section.SUMMARY:
-                                doc_comment[current_section].append(line if not line.isspace() and line else "\n")
+                                doc_comment[current_section].append(line)
                             case Section.PARAM:
                                 doc_comment[current_section][-1].description += line
                             case Section.RETURN:
@@ -99,12 +99,12 @@ class Parser(object):
                             case Section.EXAMPLE:
                                 doc_comment[current_section].append(line)
                             case Section.SEE:
-                                doc_comment[current_section].append(line if not line.isspace() and line else "\n")
+                                doc_comment[current_section].append(line)
                 elif current_section == Section.README:     # The line doesn't start with slash but current section is readme
                     if Section.NAMESPACE in doc_comment:
                         md_doc.title = Header().choose_header(level=1, title=doc_comment[Section.NAMESPACE])
                     if Section.README in doc_comment:
-                        md_doc.new_paragraph(doc_comment[Section.README])
+                        md_doc.new_paragraph('\n'.join(doc_comment[Section.README]))
                         md_doc.write('\n')
                     doc_start = False
                     doc_comment.clear()
@@ -116,7 +116,7 @@ class Parser(object):
                     if Section.DEPRECATED in doc_comment:
                         md_doc.new_paragraph("Deprecated", bold_italics_code="bi")
                         md_doc.write('\n')
-                    md_doc.new_paragraph(" ".join(doc_comment[Section.SUMMARY]))
+                    md_doc.new_paragraph('\n'.join(doc_comment[Section.SUMMARY]))
                     if Section.PARAM in doc_comment:
                         params = doc_comment[Section.PARAM]
                         md_doc.new_paragraph("Parameter:", bold_italics_code="b")
@@ -140,11 +140,11 @@ class Parser(object):
                                          text_align="left")
                     if Section.EXAMPLE in doc_comment and doc_comment[Section.EXAMPLE]:
                         md_doc.new_paragraph("Example:", bold_italics_code="b")
-                        md_doc.insert_code(code="\n".join(doc_comment[Section.EXAMPLE]), language="q")
+                        md_doc.insert_code(code='\n'.join(doc_comment[Section.EXAMPLE]), language="q")
                         md_doc.write('\n')
                     if Section.SEE in doc_comment and doc_comment[Section.SEE]:
                         md_doc.new_paragraph("See also:", bold_italics_code="b")
-                        md_doc.new_paragraph(" ".join(doc_comment[Section.SEE]))
+                        md_doc.new_paragraph('\n'.join(doc_comment[Section.SEE]))
                         md_doc.write('\n')
                     doc_start = False
                     doc_comment.clear()
