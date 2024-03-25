@@ -40,7 +40,7 @@ class Generator(object):
                         path = keyword_to_path[keyword]
                         text = text.replace(
                             f'{Section.LINK.value}{{{keyword}}}',
-                            f'[{keyword}]({'' if path == doc.path else Path(os.path.relpath(path, start=doc.path)).as_posix()}#{keyword.replace('.', '')})')
+                            f'[{keyword}]({'' if path == doc.path else Path(os.path.relpath(path, start=doc.path)).as_posix()}#{keyword.replace('.', '').lower()})')
                     else:
                         text = text.replace(f'{Section.LINK.value}{{{keyword}}}', keyword)
 

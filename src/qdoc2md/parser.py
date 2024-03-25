@@ -50,7 +50,7 @@ class Parser(object):
                         tokens = line.split(' ', 1)
                         param_name = tokens[0]
                         index_left_brace, index_right_brace = line.find("{"), line.find("}")
-                        param_type = line[index_left_brace+1:index_right_brace]
+                        param_type = line[index_left_brace+1:index_right_brace] if index_left_brace != -1 and index_right_brace != -1 else ''
                         param_desc = line[index_right_brace+1:]
                         if Section.PARAM not in doc_comment:
                             doc_comment[Section.PARAM] = [Param(param_name, param_type, param_desc)]
@@ -61,7 +61,7 @@ class Parser(object):
                         current_section = Section.RETURN
                         line = line.removeprefix(Section.RETURN).lstrip()
                         index_left_brace, index_right_brace = line.find("{"), line.find("}")
-                        datatype = line[index_left_brace+1:index_right_brace]
+                        datatype = line[index_left_brace+1:index_right_brace] if index_left_brace != -1 and index_right_brace != -1 else ''
                         desc = line[index_right_brace+1:]
                         doc_comment[Section.RETURN] = Param("", datatype, desc)
 
@@ -69,7 +69,7 @@ class Parser(object):
                         current_section = Section.THROWS
                         line = line.removeprefix(Section.THROWS).lstrip()
                         index_left_brace, index_right_brace = line.find("{"), line.find("}")
-                        datatype = line[index_left_brace+1:index_right_brace]
+                        datatype = line[index_left_brace+1:index_right_brace] if index_left_brace != -1 and index_right_brace != -1 else ''
                         desc = line[index_right_brace+1:]
                         if Section.THROWS not in doc_comment:
                             doc_comment[Section.THROWS] = [Param('', datatype, desc)]
@@ -92,7 +92,7 @@ class Parser(object):
                         current_section = Section.DATATYPE
                         line = line.removeprefix(Section.DATATYPE).lstrip()
                         index_left_brace, index_right_brace = line.find("{"), line.find("}")
-                        datatype = line[index_left_brace+1:index_right_brace]
+                        datatype = line[index_left_brace+1:index_right_brace] if index_left_brace != -1 and index_right_brace != -1 else ''
                         doc_comment[Section.DATATYPE] = datatype
 
                     else:       # Continuation of the current section
@@ -135,7 +135,7 @@ class Parser(object):
                     if Section.PARAM in doc_comment:
                         params = doc_comment[Section.PARAM]
                         md_doc.new_paragraph("Parameter:", bold_italics_code="b")
-                        md_doc.write('\n')
+                        md_doc.new_paragraph()
                         for param in params:
                             md_doc.write(f'1. `{param.name}` ({param.datatype}): {param.description}\n')
                     if Section.RETURN in doc_comment:
@@ -143,7 +143,7 @@ class Parser(object):
                         md_doc.write(f' ({doc_comment[Section.RETURN].datatype}): {doc_comment[Section.RETURN].description}\n')
                     if Section.THROWS in doc_comment:
                         md_doc.new_paragraph("Throws:", bold_italics_code="b")
-                        md_doc.write('\n')
+                        md_doc.new_paragraph()
                         for throws in doc_comment[Section.THROWS]:
                             md_doc.write(f'1. {throws.datatype}: {throws.description}\n')
                     if Section.EXAMPLE in doc_comment and doc_comment[Section.EXAMPLE]:
