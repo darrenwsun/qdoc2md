@@ -9,14 +9,13 @@ from qdoc2md.section import Section
 
 
 class Generator(object):
-    def __init__(self, source_suffix, doc_start="///", out_dir="docs"):
-        self.source_suffix = source_suffix
+    def __init__(self, doc_start="///", out_dir="docs"):
         self.parser = Parser(doc_start, out_dir)
         self.out_dir = out_dir
 
     def generate(self, src):
         docs = []
-        for filename in glob(src + '/**/*.' + self.source_suffix, recursive=True):
+        for filename in glob(src + '/**/*.q', recursive=True):
             doc = self.parser.parse(src, filename)
             docs.append(doc)
 
@@ -40,7 +39,7 @@ class Generator(object):
                         path = keyword_to_path[keyword]
                         text = text.replace(
                             f'{Section.LINK.value}{{{keyword}}}',
-                            f'[{keyword}]({'' if path == doc.path else Path(os.path.relpath(path, start=doc.path)).as_posix()}#{keyword.replace('.', '').lower()})')
+                            f'[{keyword}]({"" if path == doc.path else Path(os.path.relpath(path, start=doc.path)).as_posix()}#{keyword.replace(".", "").lower()})')
                     else:
                         text = text.replace(f'{Section.LINK.value}{{{keyword}}}', keyword)
 

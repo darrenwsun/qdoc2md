@@ -4,18 +4,28 @@ build-backend = "hatchling.build"
 
 [project]
 name = "qdoc2md"
-version = "0.0.1"
+dynamic = ["version"]
+description = "Convert q documentation comments to Markdown documents"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
 authors = [
   { name="Darren Sun", email="darren@darrensun.pro" },
 ]
-description = "Converting q documentation to markdown documents"
-readme = "README.md"
-requires-python = ">=3.8"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+keywords = [
+    "qdoc",
+    "markdown"
 ]
+dependencies = [
+    "mdutils == 1.6"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License"
+]
+[project.scripts]
+qdoc2md = "qdoc2md.main:qdoc2md"
 
 [project.urls]
 Homepage = "https://github.com/darrenwsun/qdoc2md"
@@ -26,3 +36,6 @@ pythonpath = "src"
 addopts = [
     "--import-mode=importlib",
 ]
+
+[tool.hatch.version]
+path = "src/qdoc2md/__version__.py"
