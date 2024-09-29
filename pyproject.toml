@@ -14,6 +14,7 @@ authors = [
 ]
 keywords = [
     "qdoc",
+    "kdb",
     "markdown"
 ]
 dependencies = [
@@ -31,11 +32,8 @@ qdoc2md = "qdoc2md.main:qdoc2md"
 Homepage = "https://github.com/darrenwsun/qdoc2md"
 Issues = "https://github.com/darrenwsun/qdoc2md/issues"
 
-[tool.pytest.ini_options]
-pythonpath = "src"
-addopts = [
-    "--import-mode=importlib",
-]
-
 [tool.hatch.version]
 path = "src/qdoc2md/__version__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qdoc2md"]

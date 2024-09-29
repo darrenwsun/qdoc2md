@@ -1,0 +1,18 @@
+site_name: qdoc2md
+#use_directory_urls: false
+markdown_extensions:
+    - toc:
+        permalink: true
+    - def_list      # Definition list, see https://squidfunk.github.io/mkdocs-material/reference/lists/#using-definition-lists
+    - pymdownx.highlight:
+        anchor_linenums: true
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.superfences
+theme:
+    name: material
+    features:
+        - content.code.copy
+
+nav:
+    - 'sample': 'sample.md'
