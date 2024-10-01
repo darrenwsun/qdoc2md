@@ -137,7 +137,7 @@ def parse(src_file: str, target_file: str):
                         if Section.TITLE in doc_comment:
                             md_doc.title = Header().choose_header(level=1, title=doc_comment[Section.TITLE])
                         if Section.OVERVIEW in doc_comment:
-                            md_doc.new_paragraph('\n'.join(doc_comment[Section.OVERVIEW]))
+                            md_doc.write('\n' + '\n'.join(doc_comment[Section.OVERVIEW]))
                             md_doc.write('\n')
                         current_section = Section.UNKNOWN
                     else:
@@ -145,9 +145,9 @@ def parse(src_file: str, target_file: str):
                         name = line[:index_colon].strip()
                         names.add(name)
                         md_doc.new_header(2, name, add_table_of_contents="n")
-                        md_doc.new_paragraph(
-                            ('(DEPRECATED) ' if Section.DEPRECATED in doc_comment else '') + '\n'.join(
-                                doc_comment[Section.SUMMARY]))
+                        md_doc.write('\n' +
+                                     ('(DEPRECATED) ' if Section.DEPRECATED in doc_comment else '') + '\n'.join(
+                            doc_comment[Section.SUMMARY]))
                         if Section.PARAM in doc_comment:
                             params = doc_comment[Section.PARAM]
                             md_doc.new_paragraph("Parameters", bold_italics_code="b")
@@ -166,13 +166,11 @@ def parse(src_file: str, target_file: str):
                         if Section.EXAMPLE in doc_comment and doc_comment[Section.EXAMPLE]:
                             md_doc.new_paragraph("Example", bold_italics_code="b")
                             md_doc.insert_code(code='\n'.join(doc_comment[Section.EXAMPLE]), language="q")
-                            md_doc.write('\n')
                         if Section.SEE in doc_comment :
                             md_doc.new_paragraph("See Also", bold_italics_code="b")
                             for seealso in doc_comment[Section.SEE]:
                                 md_doc.new_paragraph(f'{seealso.ref}')
                                 md_doc.new_line(f': {seealso.description}')
-                            md_doc.write('\n')
                     current_section = Section.UNKNOWN
                     doc_comment.clear()
                     in_doc_comment = False

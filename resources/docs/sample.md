@@ -1,11 +1,9 @@
 
 # Sample
 
-
 A sample q script annotated with documentation comments.
 
 ## .sample.isdir
-
 
 Check if a path is an existing directory.
 
@@ -33,14 +31,11 @@ q).sample.isdir `src
 'TypeError: not an hsym
 ```
 
-
 **See Also**
 
 [.sample.isfile](#sampleisfile)  
 : For file check.
-
 ## .sample.isfile
-
 
 Check if a path is an existing file.
 
@@ -68,14 +63,11 @@ q).sample.isfile "tests/resources/sample.q"
 'TypeError: not an hsym
 ```
 
-
 **See Also**
 
 [.sample.isdir](#sampleisdir)  
 : For directory check.
-
 ## .sample.ishsym
-
 
 Check if a given value is an hsym.
 
