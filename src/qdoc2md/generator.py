@@ -37,21 +37,21 @@ def parse(src_file: str, target_file: str):
             line = line.lstrip()
             if line.startswith(DOC_COMMENT_SIGNAL):
                 in_doc_comment = True
-                line = line.removeprefix(DOC_COMMENT_SIGNAL)
+                line = line[len(DOC_COMMENT_SIGNAL):]
 
                 if line.startswith(Section.TITLE):
                     current_section = Section.TITLE
-                    line = line.removeprefix(Section.TITLE).lstrip()
+                    line = line[len(Section.TITLE):].lstrip()
                     doc_comment[Section.TITLE] = line
 
                 elif line.startswith(Section.OVERVIEW):
                     current_section = Section.OVERVIEW
-                    line = line.removeprefix(Section.OVERVIEW).lstrip()
+                    line = line[len(Section.OVERVIEW):].lstrip()
                     doc_comment[Section.OVERVIEW] = line
 
                 elif line.startswith(Section.PARAM):
                     current_section = Section.PARAM
-                    line = line.removeprefix(Section.PARAM).lstrip()
+                    line = line[len(Section.PARAM):].lstrip()
                     if match := re.search(r'(\w+) +(?:\{(.*)\} +)?(?:(.*))?', line, re.DOTALL):
                         param = Param(match.group(1),
                                       match.group(2) if match.group(2) else '',
@@ -65,7 +65,7 @@ def parse(src_file: str, target_file: str):
 
                 elif line.startswith(Section.RETURN):
                     current_section = Section.RETURN
-                    line = line.removeprefix(Section.RETURN).lstrip()
+                    line = line[len(Section.RETURN):].lstrip()
                     if match := re.search(r'(?:(\w+) +)?(?:\{(.*)\} +)?(.+)', line, re.DOTALL):
                         param = Param(match.group(1) if match.group(1) else '',
                                       match.group(2) if match.group(2) else '',
@@ -76,7 +76,7 @@ def parse(src_file: str, target_file: str):
 
                 elif line.startswith(Section.SIGNAL):
                     current_section = Section.SIGNAL
-                    line = line.removeprefix(Section.SIGNAL).lstrip()
+                    line = line[len(Section.SIGNAL):].lstrip()
                     if match := re.search(r'(?:\{(.*)\} +)?(.+)', line, re.DOTALL):
                         param = Param('',
                                       match.group(1) if match.group(1) else '',
@@ -97,7 +97,7 @@ def parse(src_file: str, target_file: str):
 
                 elif line.startswith(Section.SEE):
                     current_section = Section.SEE
-                    line = line.removeprefix(Section.SEE).lstrip()
+                    line = line[len(Section.SEE):].lstrip()
                     if match := re.search(r'(\{.*\})(?: +(.*))?', line, re.DOTALL):
                         seealso = SeeAlso(match.group(1),
                                           match.group(2) if match.group(2) else '')
@@ -108,7 +108,7 @@ def parse(src_file: str, target_file: str):
 
                 elif current_section == Section.UNKNOWN:
                     current_section = Section.SUMMARY
-                    line = line.removeprefix(Section.SUMMARY).lstrip()
+                    line = line.lstrip()
                     if Section.SUMMARY not in doc_comment:
                         doc_comment[Section.SUMMARY] = line
                     else:
