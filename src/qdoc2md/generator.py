@@ -2,6 +2,7 @@ import os.path
 import re
 from glob import glob
 from pathlib import Path
+from typing import List
 
 from mdutils import MdUtils
 from mdutils.tools.Header import Header
@@ -195,7 +196,7 @@ def resolve_links(docs):
         doc.md_doc.file_data_text = text
 
 
-def index_by_keyword(docs: list[Document]):
+def index_by_keyword(docs: List[Document]):
     keyword_to_path = {}
     for doc in docs:
         for keyword in doc.keywords:
