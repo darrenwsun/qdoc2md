@@ -12,7 +12,7 @@ qdoc2md --src <your_q_src> --target <output_dir>
 
 ## Specifications of Documentation Comments
 
-1. Docomments start with `/// ` (referred to as "docomment prompt" below) with whitespaces on both ends of the line ignored, and they are placed in a consecutive block above the entity (function or variable) to be documented
+1. Docomments start with `///` (referred to as "docomment prompt" below) with whitespaces on both ends of the line ignored, and they are placed in a consecutive block above the entity (function or variable) to be documented
 1. The first docomment presents a high-level summary of what the entity does. It may span multiple lines. 
 1. The following tags are supported:
    1. `@title <title>`: A word or very short phrase about the script. This is preferably put at the top of the script. In its absence, the name of the script is used as the title.

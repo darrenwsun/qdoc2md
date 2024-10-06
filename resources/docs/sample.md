@@ -17,6 +17,8 @@ Check if a path is an existing directory.
 boolean  
 : `1b` if `path` is an existing directory; `0b` otherwise.
 
+- test
+
 **Throws**
 
 `TypeError`  
@@ -35,6 +37,7 @@ q).sample.isdir `src
 
 [.sample.isfile](#sampleisfile)  
 : For file check.
+
 ## .sample.isfile
 
 Check if a path is an existing file.
@@ -67,6 +70,7 @@ q).sample.isfile "tests/resources/sample.q"
 
 [.sample.isdir](#sampleisdir)  
 : For directory check.
+
 ## .sample.ishsym
 
 Check if a given value is an hsym.
