@@ -4,8 +4,6 @@
 ///Check if a path is an existing directory.
 ///@param path {hsym} A file system path.
 ///@return {boolean} `1b` if `path` is an existing directory; `0b` otherwise.
-///
-///- test
 ///@signal {TypeError} If `path` is not an hsym.
 ///@see {@link .sample.isfile} For file check.
 ///@example

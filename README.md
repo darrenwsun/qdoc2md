@@ -14,7 +14,7 @@ qdoc2md --src <your_q_src> --target <output_dir>
 
 1. Docomments start with `///` (referred to as "docomment prompt" below) with whitespaces on both ends of the line ignored, and they are placed in a consecutive block above the entity (function or variable) to be documented
 1. The first docomment presents a high-level summary of what the entity does. It may span multiple lines. 
-1. The following tags are supported:
+1. The following tags are supported (`<>` represents placeholder, `[]` represents optional element, `{}` are verbatim to put an element in a group regardless of whitespace):
    1. `@title <title>`: A word or very short phrase about the script. This is preferably put at the top of the script. In its absence, the name of the script is used as the title.
    1. `@overview <description>`: An high-level summary of what the script does, written in Markdown. This is preferably put at the top of the script, following `@title`.
    1. `@param <name> [{datatype}] <description>`: Description of a parameter of a function, including its name, optional datatype, and more details such as what it represents.
@@ -39,3 +39,7 @@ qdoc2md --src <your_q_src> --target <output_dir>
 1. `table` or `table(c1:date;c2:symbol)`: a table, with optionally column names and datatypes
 1. `fn` or `fn(date,long)->date`: a function, with optionally the datatypes of its parameters and return value.
 1. `any`: any datatype.
+
+# Example
+
+See [sample.q](resources/sample.q) for a sample q script with the designated docomments, and [sample.md](resources/docs/sample.md) for the generated Markdown document. A static site can be built on top of the generated doc via [mkdocs](https://www.mkdocs.org/), e.g.  `cd resources && mkdocs serve`

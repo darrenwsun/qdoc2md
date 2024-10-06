@@ -17,8 +17,6 @@ Check if a path is an existing directory.
 boolean  
 : `1b` if `path` is an existing directory; `0b` otherwise.
 
-- test
-
 **Throws**
 
 `TypeError`  
