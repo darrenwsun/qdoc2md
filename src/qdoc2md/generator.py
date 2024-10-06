@@ -114,21 +114,14 @@ def parse(src_file: str, target_file: str):
                         doc_comment[Section.SUMMARY] += line
 
                 else:       # Continuation of the current section
-                    match current_section:
-                        case Section.OVERVIEW:
-                            doc_comment[current_section] += line
-                        case Section.SUMMARY:
-                            doc_comment[current_section] += line
-                        case Section.PARAM:
-                            doc_comment[current_section][-1].description += line
-                        case Section.RETURN:
-                            doc_comment[current_section].description += line
-                        case Section.SIGNAL:
-                            doc_comment[current_section][-1].description += line
-                        case Section.EXAMPLE:
-                            doc_comment[current_section] += line
-                        case Section.SEE:
-                            doc_comment[current_section][-1].description += line
+                    if current_section == Section.OVERVIEW or current_section == Section.SUMMARY or current_section == Section.EXAMPLE:
+                        doc_comment[current_section] += line
+                    elif current_section == Section.PARAM or current_section == Section.SIGNAL or current_section == Section.SEE:
+                        doc_comment[current_section][-1].description += line
+                    elif current_section == Section.RETURN:
+                        doc_comment[current_section].description += line
+                    else:
+                        pass
             elif line.startswith('/'):
                 pass    # Ignore non-documentation comments
             else:   # End of documentation comments
