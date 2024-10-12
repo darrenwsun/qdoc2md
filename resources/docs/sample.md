@@ -91,3 +91,17 @@ q).sample.ishsym `:/tmp/abc
 q).sample.ishsym `$"/tmp/abc"
 0b
 ```
+
+## .sample.isoweekday
+
+Return the day of the week as an integer, where Monday is 1 and Sunday is 7.
+
+**Parameters**
+
+`d`⚛: date  
+: A date.
+
+**Returns**
+
+long  
+: The day of the week.

@@ -41,3 +41,8 @@
   if[-11h<>type x; :0b];
   $[":"=first string x; 1b; 0b]
  };
+
+///Return the day of the week as an integer, where Monday is 1 and Sunday is 7.
+///@param d @atomic {date} A date.
+///@return {long} The day of the week.
+.sample.isoweekday:{[d] (d-1) mod 7 };

@@ -5,6 +5,7 @@ from mdutils import MdUtils
 
 
 class Section(str, Enum):
+    ATOMIC = '@atomic'
     DEPRECATED = '@deprecated'
     EXAMPLE = '@example'
     LINK = '@link'
@@ -21,6 +22,7 @@ class Section(str, Enum):
 @dataclass
 class Param:
     name: str
+    atomic: bool
     datatype: str
     description: str
 

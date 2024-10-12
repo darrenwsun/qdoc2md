@@ -11,6 +11,7 @@ from qdoc2md.model import Param, SeeAlso, Document, Section
 
 DOC_COMMENT_SIGNAL = '///'
 
+
 def generate(sources, target):
     docs = []
     for src in sources:
@@ -52,10 +53,11 @@ def parse(src_file: str, target_file: str):
                 elif line.startswith(Section.PARAM):
                     current_section = Section.PARAM
                     line = line[len(Section.PARAM):].lstrip()
-                    if match := re.search(r'(\w+) +(?:\{(.*)\} +)?(?:(.*))?', line, re.DOTALL):
+                    if match := re.search(r'(\w+) +(?:(@atomic) +)?(?:\{(.*)\} +)?(?:(.*))?', line, re.DOTALL):
                         param = Param(match.group(1),
-                                      match.group(2) if match.group(2) else '',
-                                      match.group(3))
+                                      True if match.group(2) else False,
+                                      match.group(3) if match.group(3) else '',
+                                      match.group(4))
                         if Section.PARAM not in doc_comment:
                             doc_comment[Section.PARAM] = [param]
                         else:
@@ -68,6 +70,7 @@ def parse(src_file: str, target_file: str):
                     line = line[len(Section.RETURN):].lstrip()
                     if match := re.search(r'(?:(\w+) +)?(?:\{(.*)\} +)?(.+)', line, re.DOTALL):
                         param = Param(match.group(1) if match.group(1) else '',
+                                      False,
                                       match.group(2) if match.group(2) else '',
                                       match.group(3))
                         doc_comment[Section.RETURN] = param
@@ -79,6 +82,7 @@ def parse(src_file: str, target_file: str):
                     line = line[len(Section.SIGNAL):].lstrip()
                     if match := re.search(r'(?:\{(.*)\} +)?(.+)', line, re.DOTALL):
                         param = Param('',
+                                      False,
                                       match.group(1) if match.group(1) else '',
                                       match.group(2))
                         if Section.SIGNAL not in doc_comment:
@@ -144,12 +148,14 @@ def parse(src_file: str, target_file: str):
                             md_doc.write('\n')
                             md_doc.write('Parameters', bold_italics_code="b")
                             for param in params:
-                                md_doc.new_paragraph(f'`{param.name}`: {param.datatype}')
+                                md_doc.new_paragraph(f'`{param.name}`' + ('⚛' if param.atomic else '') + f': {param.datatype}')
                                 md_doc.new_line(f': {param.description}')
                         if Section.RETURN in doc_comment:
+                            param = doc_comment[Section.RETURN]
                             md_doc.write('\n')
                             md_doc.write('Returns', bold_italics_code="b")
-                            md_doc.new_paragraph(f'{doc_comment[Section.RETURN].datatype}')
+                            md_doc.new_paragraph(
+                                (f'`{param.name}`: ' if param.name else '') + f'{doc_comment[Section.RETURN].datatype}')
                             md_doc.new_line(f': {doc_comment[Section.RETURN].description}')
                         if Section.SIGNAL in doc_comment:
                             md_doc.write('\n')
@@ -174,6 +180,7 @@ def parse(src_file: str, target_file: str):
                 else:
                     pass
     return Document(target_file, md_doc, names)
+
 
 def resolve_links(docs):
     keyword_to_path = index_by_keyword(docs)
