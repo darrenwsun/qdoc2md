@@ -39,20 +39,21 @@ def parse(src_file: str, target_file: str):
             if line.startswith(DOC_COMMENT_SIGNAL):
                 in_doc_comment = True
                 line = line[len(DOC_COMMENT_SIGNAL):]
+                tag = ''
+                if match := re.search(r'\s*(@\w+)', line):
+                    tag = match.group(1)
+                    line = line.lstrip()[len(tag)+1:].lstrip()
 
-                if line.startswith(Section.TITLE):
+                if tag == Section.TITLE:
                     current_section = Section.TITLE
-                    line = line[len(Section.TITLE):].lstrip()
                     doc_comment[Section.TITLE] = line
 
-                elif line.startswith(Section.OVERVIEW):
+                elif tag == Section.OVERVIEW:
                     current_section = Section.OVERVIEW
-                    line = line[len(Section.OVERVIEW):].lstrip()
                     doc_comment[Section.OVERVIEW] = line
 
-                elif line.startswith(Section.PARAM):
+                elif tag == Section.PARAM:
                     current_section = Section.PARAM
-                    line = line[len(Section.PARAM):].lstrip()
                     if match := re.search(r'(\w+) +(?:(@atomic) +)?(?:\{(.*)\} +)?(?:(.*))?', line, re.DOTALL):
                         param = Param(match.group(1),
                                       True if match.group(2) else False,
@@ -65,9 +66,8 @@ def parse(src_file: str, target_file: str):
                     else:
                         pass
 
-                elif line.startswith(Section.RETURN):
+                elif tag == Section.RETURN:
                     current_section = Section.RETURN
-                    line = line[len(Section.RETURN):].lstrip()
                     if match := re.search(r'(?:(\w+) +)?(?:\{(.*)\} +)?(.+)', line, re.DOTALL):
                         param = Param(match.group(1) if match.group(1) else '',
                                       False,
@@ -77,9 +77,8 @@ def parse(src_file: str, target_file: str):
                     else:
                         pass
 
-                elif line.startswith(Section.SIGNAL):
+                elif tag == Section.SIGNAL:
                     current_section = Section.SIGNAL
-                    line = line[len(Section.SIGNAL):].lstrip()
                     if match := re.search(r'(?:\{(.*)\} +)?(.+)', line, re.DOTALL):
                         param = Param('',
                                       False,
@@ -92,16 +91,15 @@ def parse(src_file: str, target_file: str):
                     else:
                         pass
 
-                elif line.startswith(Section.DEPRECATED):
+                elif tag == Section.DEPRECATED:
                     doc_comment[Section.DEPRECATED] = True
 
-                elif line.startswith(Section.EXAMPLE):
+                elif tag == Section.EXAMPLE:
                     current_section = Section.EXAMPLE
                     doc_comment[Section.EXAMPLE] = ''
 
-                elif line.startswith(Section.SEE):
+                elif tag == Section.SEE:
                     current_section = Section.SEE
-                    line = line[len(Section.SEE):].lstrip()
                     if match := re.search(r'(\{.*\})(?: +(.*))?', line, re.DOTALL):
                         seealso = SeeAlso(match.group(1),
                                           match.group(2) if match.group(2) else '')
@@ -110,9 +108,8 @@ def parse(src_file: str, target_file: str):
                         else:
                             doc_comment[Section.SEE].append(seealso)
 
-                elif current_section == Section.UNKNOWN:
+                elif current_section == Section.UNKNOWN:    # Summary line
                     current_section = Section.SUMMARY
-                    line = line.lstrip()
                     if Section.SUMMARY not in doc_comment:
                         doc_comment[Section.SUMMARY] = line
                     else:
