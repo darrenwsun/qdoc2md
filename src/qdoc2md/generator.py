@@ -31,7 +31,7 @@ def parse(src_file: str, target_file: str):
     md_doc = MdUtils(file_name=target_file, title=Path(src_file).stem)
     doc_comment = {}
     names = set()
-    current_section = Section.UNKNOWN
+    cur_section = Section.UNKNOWN
     in_doc_comment = False
     with open(src_file, mode="r") as f:
         for line in f:
@@ -45,94 +45,102 @@ def parse(src_file: str, target_file: str):
                     line = line.lstrip()[len(tag)+1:].lstrip()
 
                 if tag == Section.TITLE:
-                    current_section = Section.TITLE
-                    doc_comment[Section.TITLE] = line
+                    cur_section = Section.TITLE
+                    doc_comment[cur_section] = line
 
                 elif tag == Section.OVERVIEW:
-                    current_section = Section.OVERVIEW
-                    doc_comment[Section.OVERVIEW] = line
+                    cur_section = Section.OVERVIEW
+                    doc_comment[cur_section] = line
+
+                elif tag == Section.OWNER:
+                    cur_section = Section.OWNER
+                    doc_comment[cur_section] = line
 
                 elif tag == Section.PARAM:
-                    current_section = Section.PARAM
+                    cur_section = Section.PARAM
                     if match := re.search(r'(\w+) +(?:(@atomic) +)?(?:\{(.*)\} +)?(?:(.*))?', line, re.DOTALL):
                         param = Param(match.group(1),
                                       True if match.group(2) else False,
                                       match.group(3) if match.group(3) else '',
                                       match.group(4))
                         if Section.PARAM not in doc_comment:
-                            doc_comment[Section.PARAM] = [param]
+                            doc_comment[cur_section] = [param]
                         else:
-                            doc_comment[Section.PARAM].append(param)
+                            doc_comment[cur_section].append(param)
                     else:
                         pass
 
                 elif tag == Section.RETURN:
-                    current_section = Section.RETURN
+                    cur_section = Section.RETURN
                     if match := re.search(r'(?:(\w+) +)?(?:\{(.*)\} +)?(.+)', line, re.DOTALL):
                         param = Param(match.group(1) if match.group(1) else '',
                                       False,
                                       match.group(2) if match.group(2) else '',
                                       match.group(3))
-                        doc_comment[Section.RETURN] = param
+                        doc_comment[cur_section] = param
                     else:
                         pass
 
                 elif tag == Section.SIGNAL:
-                    current_section = Section.SIGNAL
+                    cur_section = Section.SIGNAL
                     if match := re.search(r'(?:\{(.*)\} +)?(.+)', line, re.DOTALL):
                         param = Param('',
                                       False,
                                       match.group(1) if match.group(1) else '',
                                       match.group(2))
                         if Section.SIGNAL not in doc_comment:
-                            doc_comment[Section.SIGNAL] = [param]
+                            doc_comment[cur_section] = [param]
                         else:
-                            doc_comment[Section.SIGNAL].append(param)
+                            doc_comment[cur_section].append(param)
                     else:
                         pass
 
                 elif tag == Section.DEPRECATED:
-                    doc_comment[Section.DEPRECATED] = True
+                    cur_section = Section.DEPRECATED
+                    doc_comment[cur_section] = True
 
                 elif tag == Section.EXAMPLE:
-                    current_section = Section.EXAMPLE
-                    doc_comment[Section.EXAMPLE] = ''
+                    cur_section = Section.EXAMPLE
+                    doc_comment[cur_section] = ''
 
                 elif tag == Section.SEE:
-                    current_section = Section.SEE
+                    cur_section = Section.SEE
                     if match := re.search(r'(\{.*\})(?: +(.*))?', line, re.DOTALL):
                         seealso = SeeAlso(match.group(1),
                                           match.group(2) if match.group(2) else '')
                         if Section.SEE not in doc_comment:
-                            doc_comment[Section.SEE] = [seealso]
+                            doc_comment[cur_section] = [seealso]
                         else:
-                            doc_comment[Section.SEE].append(seealso)
+                            doc_comment[cur_section].append(seealso)
 
-                elif current_section == Section.UNKNOWN:    # Summary line
-                    current_section = Section.SUMMARY
+                elif cur_section == Section.UNKNOWN:    # Summary line
+                    cur_section = Section.SUMMARY
                     if Section.SUMMARY not in doc_comment:
-                        doc_comment[Section.SUMMARY] = line
+                        doc_comment[cur_section] = line
                     else:
-                        doc_comment[Section.SUMMARY] += line
+                        doc_comment[cur_section] += line
 
                 else:       # Continuation of the current section
-                    if current_section == Section.OVERVIEW or current_section == Section.SUMMARY or current_section == Section.EXAMPLE:
-                        doc_comment[current_section] += line
-                    elif current_section == Section.PARAM or current_section == Section.SIGNAL or current_section == Section.SEE:
-                        doc_comment[current_section][-1].description += line
-                    elif current_section == Section.RETURN:
-                        doc_comment[current_section].description += line
+                    if cur_section == Section.OVERVIEW or cur_section == Section.SUMMARY or cur_section == Section.EXAMPLE:
+                        doc_comment[cur_section] += line
+                    elif cur_section == Section.PARAM or cur_section == Section.SIGNAL or cur_section == Section.SEE:
+                        doc_comment[cur_section][-1].description += line
+                    elif cur_section == Section.RETURN:
+                        doc_comment[cur_section].description += line
                     else:
                         pass
             elif line.startswith('/'):
                 pass    # Ignore non-documentation comments
             else:   # End of documentation comments
                 if in_doc_comment:
-                    if current_section == Section.TITLE or current_section == Section.OVERVIEW:
+                    if cur_section == Section.TITLE or cur_section == Section.OVERVIEW or cur_section == Section.OWNER:
                         if Section.TITLE in doc_comment:
-                            md_doc.title = Header().choose_header(level=1, title=doc_comment[Section.TITLE])
+                            md_doc.title = ''
+                            md_doc.new_header(1, doc_comment[Section.TITLE], add_table_of_contents="n")
                         if Section.OVERVIEW in doc_comment:
-                            md_doc.write(doc_comment[Section.OVERVIEW])
+                            md_doc.write(doc_comment[Section.OVERVIEW] + '\n')
+                        if Section.OWNER in doc_comment:
+                            md_doc.write(f'This is owned by {doc_comment[Section.OWNER]}.' + '\n')
                     else:
                         index_colon = line.find(":")
                         name = line[:index_colon].strip()
@@ -171,7 +179,7 @@ def parse(src_file: str, target_file: str):
                             for seealso in doc_comment[Section.SEE]:
                                 md_doc.new_paragraph(f'{seealso.ref}')
                                 md_doc.new_line(f': {seealso.description}')
-                    current_section = Section.UNKNOWN
+                    cur_section = Section.UNKNOWN
                     doc_comment.clear()
                     in_doc_comment = False
                 else:

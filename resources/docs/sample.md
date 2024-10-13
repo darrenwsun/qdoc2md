@@ -3,6 +3,9 @@
 
 A sample q script annotated with documentation comments.
 
+This is owned by [Darren Sun](https://github.com/darrenwsun)
+
+
 ## .sample.isdir
 
 Check if a path is an existing directory.

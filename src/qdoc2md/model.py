@@ -10,6 +10,7 @@ class Section(str, Enum):
     EXAMPLE = '@example'
     LINK = '@link'
     OVERVIEW = '@overview'
+    OWNER = '@owner'
     PARAM = '@param'
     RETURN = '@return'
     SIGNAL = '@signal'
