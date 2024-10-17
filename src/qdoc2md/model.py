@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import List
 
 from mdutils import MdUtils
 
@@ -25,7 +26,7 @@ class Param:
     name: str
     atomic: bool
     datatype: str
-    description: str
+    description: List[str]
 
 
 @dataclass

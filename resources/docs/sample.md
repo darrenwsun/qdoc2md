@@ -12,18 +12,21 @@ Check if a path is an existing directory.
 
 **Parameters**
 
-`path`: hsym  
-: A file system path.
+`path`: hsym
 
-**Returns**
+:   A file system path.
 
-boolean  
-: `1b` if `path` is an existing directory; `0b` otherwise.
+**Return**
 
-**Throws**
+boolean
 
-`TypeError`  
-: If `path` is not an hsym.
+:   `1b` if `path` is an existing directory; `0b` otherwise.
+
+**Signals**
+
+`TypeError`
+
+:   If `path` is not an hsym.
 
 **Example**
 
@@ -45,18 +48,21 @@ Check if a path is an existing file.
 
 **Parameters**
 
-`path`: hsym  
-: A file system path.
+`path`: hsym
 
-**Returns**
+:   A file system path.
 
-boolean  
-: `1b` if `path` is an existing file; `0b` otherwise.
+**Return**
 
-**Throws**
+boolean
 
-`TypeError`  
-: If `path` is not an hsym.
+:   `1b` if `path` is an existing file; `0b` otherwise.
+
+**Signals**
+
+`TypeError`
+
+:   If `path` is not an hsym.
 
 **Example**
 
@@ -78,13 +84,15 @@ Check if a given value is an hsym.
 
 **Parameters**
 
-`x`: any  
-: Anything.
+`x`: any
 
-**Returns**
+:   Anything.
 
-boolean  
-: `1b` if `x` is an hsym; `0b` otherwise.
+**Return**
+
+boolean
+
+:   `1b` if `x` is an hsym; `0b` otherwise.
 
 **Example**
 
@@ -101,10 +109,12 @@ Return the day of the week as an integer, where Monday is 1 and Sunday is 7.
 
 **Parameters**
 
-`d`⚛: date  
-: A date.
+`d`⚛: date
 
-**Returns**
+:   A date.
 
-long  
-: The day of the week.
+**Return**
+
+long
+
+:   The day of the week.

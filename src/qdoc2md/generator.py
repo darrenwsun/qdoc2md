@@ -62,7 +62,7 @@ def parse(src_file: str, target_file: str):
                         param = Param(match.group(1),
                                       True if match.group(2) else False,
                                       match.group(3) if match.group(3) else '',
-                                      match.group(4))
+                                      [match.group(4)])
                         if Section.PARAM not in doc_comment:
                             doc_comment[cur_section] = [param]
                         else:
@@ -76,7 +76,7 @@ def parse(src_file: str, target_file: str):
                         param = Param(match.group(1) if match.group(1) else '',
                                       False,
                                       match.group(2) if match.group(2) else '',
-                                      match.group(3))
+                                      [match.group(3)])
                         doc_comment[cur_section] = param
                     else:
                         pass
@@ -87,7 +87,7 @@ def parse(src_file: str, target_file: str):
                         param = Param('',
                                       False,
                                       match.group(1) if match.group(1) else '',
-                                      match.group(2))
+                                      [match.group(2)])
                         if Section.SIGNAL not in doc_comment:
                             doc_comment[cur_section] = [param]
                         else:
@@ -124,9 +124,11 @@ def parse(src_file: str, target_file: str):
                     if cur_section == Section.OVERVIEW or cur_section == Section.SUMMARY or cur_section == Section.EXAMPLE:
                         doc_comment[cur_section] += line
                     elif cur_section == Section.PARAM or cur_section == Section.SIGNAL or cur_section == Section.SEE:
-                        doc_comment[cur_section][-1].description += line
+                        doc_comment[cur_section][-1].description.append(line)
                     elif cur_section == Section.RETURN:
-                        doc_comment[cur_section].description += line
+                        doc_comment[cur_section].description.append(line)
+                    elif cur_section == Section.SEE:
+                        doc_comment[cur_section][-1].description += line
                     else:
                         pass
             elif line.startswith('/'):
@@ -153,21 +155,24 @@ def parse(src_file: str, target_file: str):
                             md_doc.write('\n')
                             md_doc.write('Parameters', bold_italics_code="b")
                             for param in params:
-                                md_doc.new_paragraph(f'`{param.name}`' + ('⚛' if param.atomic else '') + f': {param.datatype}')
-                                md_doc.new_line(f': {param.description}')
+                                md_doc.new_paragraph(f'`{param.name}`' + ('⚛' if param.atomic else '') + f': {param.datatype}\n\n')
+                                description = ':' + (''.join('    ' + line for line in param.description))[1:]
+                                md_doc.write(description)
                         if Section.RETURN in doc_comment:
                             param = doc_comment[Section.RETURN]
                             md_doc.write('\n')
-                            md_doc.write('Returns', bold_italics_code="b")
+                            md_doc.write('Return', bold_italics_code="b")
                             md_doc.new_paragraph(
-                                (f'`{param.name}`: ' if param.name else '') + f'{doc_comment[Section.RETURN].datatype}')
-                            md_doc.new_line(f': {doc_comment[Section.RETURN].description}')
+                                (f'`{param.name}`: ' if param.name else '') + f'{doc_comment[Section.RETURN].datatype}\n\n')
+                            description = ':' + (''.join('    ' + line for line in doc_comment[Section.RETURN].description))[1:]
+                            md_doc.write(description)
                         if Section.SIGNAL in doc_comment:
                             md_doc.write('\n')
-                            md_doc.write('Throws', bold_italics_code="b")
+                            md_doc.write('Signals', bold_italics_code="b")
                             for throws in doc_comment[Section.SIGNAL]:
-                                md_doc.new_paragraph(f'`{throws.datatype}`')
-                                md_doc.new_line(f': {throws.description}')
+                                md_doc.new_paragraph(f'`{throws.datatype}`\n\n')
+                                description = ':' + (''.join('    ' + line for line in throws.description))[1:]
+                                md_doc.write(description)
                         if Section.EXAMPLE in doc_comment and doc_comment[Section.EXAMPLE]:
                             md_doc.write('\n')
                             md_doc.write('Example', bold_italics_code="b")
