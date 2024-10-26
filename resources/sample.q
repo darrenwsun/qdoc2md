@@ -1,6 +1,5 @@
 ///@title Sample
 ///@overview A sample q script annotated with documentation comments.
-///@owner [Darren Sun](https://github.com/darrenwsun)
 
 ///Check if a path is an existing directory.
 ///@param path {hsym} A file system path.

@@ -3,8 +3,6 @@
 
 A sample q script annotated with documentation comments.
 
-This is owned by [Darren Sun](https://github.com/darrenwsun)
-
 
 ## .sample.isdir
 
@@ -12,19 +10,19 @@ Check if a path is an existing directory.
 
 **Parameters**
 
-`path`: hsym
+`path`: *hsym*
 
 :   A file system path.
 
 **Return**
 
-boolean
+: *boolean*
 
 :   `1b` if `path` is an existing directory; `0b` otherwise.
 
 **Signals**
 
-`TypeError`
+`*TypeError*`
 
 :   If `path` is not an hsym.
 
@@ -39,8 +37,14 @@ q).sample.isdir `src
 
 **See Also**
 
-[.sample.isfile](#sampleisfile)  
-: For file check.
+[.sample.isfile](#sampleisfile) 
+
+:   For file check.
+
+
+[.sample.ishsym](#sampleishsym) 
+
+:   For sym check.
 
 ## .sample.isfile
 
@@ -48,19 +52,19 @@ Check if a path is an existing file.
 
 **Parameters**
 
-`path`: hsym
+`path`: *hsym*
 
 :   A file system path.
 
 **Return**
 
-boolean
+: *boolean*
 
 :   `1b` if `path` is an existing file; `0b` otherwise.
 
 **Signals**
 
-`TypeError`
+`*TypeError*`
 
 :   If `path` is not an hsym.
 
@@ -75,8 +79,9 @@ q).sample.isfile "tests/resources/sample.q"
 
 **See Also**
 
-[.sample.isdir](#sampleisdir)  
-: For directory check.
+[.sample.isdir](#sampleisdir) 
+
+:   For directory check.
 
 ## .sample.ishsym
 
@@ -84,13 +89,13 @@ Check if a given value is an hsym.
 
 **Parameters**
 
-`x`: any
+`x`: *any*
 
 :   Anything.
 
 **Return**
 
-boolean
+: *boolean*
 
 :   `1b` if `x` is an hsym; `0b` otherwise.
 
@@ -109,12 +114,12 @@ Return the day of the week as an integer, where Monday is 1 and Sunday is 7.
 
 **Parameters**
 
-`d`⚛: date
+`d`⚛: *date*
 
 :   A date.
 
 **Return**
 
-long
+: *long*
 
 :   The day of the week.

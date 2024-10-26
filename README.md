@@ -17,10 +17,9 @@ qdoc2md --src <your_q_src> --target <output_dir>
 1. The following tags are supported (`<>` represents placeholder, `[]` represents optional element, `{}` are verbatim to put an element in a group regardless of whitespace):
    1. `@title <title>`: A word or very short phrase about the script. This is preferably put at the top of the script. In its absence, the name of the script is used as the title.
    1. `@overview <description>`: An high-level summary of what the script does, written in Markdown. This is preferably put at the top of the script, following `@title`.
-   1. `@owner <owner>`: Script owner. This is preferably put at the top of the script, following `@overview`.
-   1. `@param <name> [@atomic] [{datatype}] <description>`: Description of a parameter of a function, including its name, optional flag for atomic behavior, optional datatype, and more details such as what it represents.
-   1. `@returns [<name>] [{<datatype>}] <description>`: Description of return value of a function, including its optional name, optional datatype, and more details such as what it represents.
-   1. `@signal {<error>} <description>`: errors that may be signaled.
+   1. `@param <name> [@atomic] [{datatype}] [description]`: Description of a parameter of a function, including its name, optional flag for atomic behavior, optional datatype, and more details such as what it represents.
+   1. `@returns [<name>] [{<datatype>}] [description]`: Description of return value of a function, including its optional name, optional datatype, and more details such as what it represents.
+   1. `@signal {<error>} [description]`: errors that may be signaled.
    1. `@example`: Example usage of a function. It should appear following the docomment prompt, and the example starts from the next line until the presence of another tag.
    1. `@see {<name>} <description>`: Entry for reference. Preferably `<name>` is a link either via `@link` or a usual Markdown link. `<description>` supports Markdown syntax.   
    1. `@deprecated`: Mark the entity deprecated. It should appear following the docomment prompt.

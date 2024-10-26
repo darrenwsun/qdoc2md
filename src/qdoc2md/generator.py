@@ -52,17 +52,13 @@ def parse(src_file: str, target_file: str):
                     cur_section = Section.OVERVIEW
                     doc_comment[cur_section] = line
 
-                elif tag == Section.OWNER:
-                    cur_section = Section.OWNER
-                    doc_comment[cur_section] = line
-
                 elif tag == Section.PARAM:
                     cur_section = Section.PARAM
-                    if match := re.search(r'(\w+) +(?:(@atomic) +)?(?:\{(.*)\} +)?(?:(.*))?', line, re.DOTALL):
+                    if match := re.search(r'(\w+) *(?:(@atomic) *)?(?:\{(.*)\} *)?(?:(\S.*))?', line, re.DOTALL):
                         param = Param(match.group(1),
                                       True if match.group(2) else False,
                                       match.group(3) if match.group(3) else '',
-                                      [match.group(4)])
+                                      [match.group(4) if match.group(4) else ''])
                         if Section.PARAM not in doc_comment:
                             doc_comment[cur_section] = [param]
                         else:
@@ -72,18 +68,18 @@ def parse(src_file: str, target_file: str):
 
                 elif tag == Section.RETURN:
                     cur_section = Section.RETURN
-                    if match := re.search(r'(?:(\w+) +)?(?:\{(.*)\} +)?(.+)', line, re.DOTALL):
+                    if match := re.search(r'(?:(\w+) *)?(?:\{(.*)\} *)?(\S.*)?', line, re.DOTALL):
                         param = Param(match.group(1) if match.group(1) else '',
                                       False,
                                       match.group(2) if match.group(2) else '',
-                                      [match.group(3)])
+                                      [match.group(3) if match.group(3) else ''])
                         doc_comment[cur_section] = param
                     else:
                         pass
 
                 elif tag == Section.SIGNAL:
                     cur_section = Section.SIGNAL
-                    if match := re.search(r'(?:\{(.*)\} +)?(.+)', line, re.DOTALL):
+                    if match := re.search(r'(?:\{(.*)\} *)?(\S.*)?', line, re.DOTALL):
                         param = Param('',
                                       False,
                                       match.group(1) if match.group(1) else '',
@@ -105,7 +101,7 @@ def parse(src_file: str, target_file: str):
 
                 elif tag == Section.SEE:
                     cur_section = Section.SEE
-                    if match := re.search(r'(\{.*\})(?: +(.*))?', line, re.DOTALL):
+                    if match := re.search(r'(\{.*\} *)(?:(\S.*))?', line, re.DOTALL):
                         seealso = SeeAlso(match.group(1),
                                           match.group(2) if match.group(2) else '')
                         if Section.SEE not in doc_comment:
@@ -135,14 +131,12 @@ def parse(src_file: str, target_file: str):
                 pass    # Ignore non-documentation comments
             else:   # End of documentation comments
                 if in_doc_comment:
-                    if cur_section == Section.TITLE or cur_section == Section.OVERVIEW or cur_section == Section.OWNER:
+                    if cur_section == Section.TITLE or cur_section == Section.OVERVIEW:
                         if Section.TITLE in doc_comment:
                             md_doc.title = ''
                             md_doc.new_header(1, doc_comment[Section.TITLE], add_table_of_contents="n")
                         if Section.OVERVIEW in doc_comment:
                             md_doc.write(doc_comment[Section.OVERVIEW] + '\n')
-                        if Section.OWNER in doc_comment:
-                            md_doc.write(f'This is owned by {doc_comment[Section.OWNER]}.' + '\n')
                     else:
                         index_colon = line.find(":")
                         name = line[:index_colon].strip()
@@ -155,22 +149,26 @@ def parse(src_file: str, target_file: str):
                             md_doc.write('\n')
                             md_doc.write('Parameters', bold_italics_code="b")
                             for param in params:
-                                md_doc.new_paragraph(f'`{param.name}`' + ('⚛' if param.atomic else '') + f': {param.datatype}\n\n')
+                                md_doc.new_paragraph(f'`{param.name}`' +
+                                                     ('⚛' if param.atomic else '') +
+                                                     (f': *{param.datatype}*' if param.datatype else '')
+                                                     + '\n\n')
                                 description = ':' + (''.join('    ' + line for line in param.description))[1:]
                                 md_doc.write(description)
                         if Section.RETURN in doc_comment:
                             param = doc_comment[Section.RETURN]
                             md_doc.write('\n')
                             md_doc.write('Return', bold_italics_code="b")
-                            md_doc.new_paragraph(
-                                (f'`{param.name}`: ' if param.name else '') + f'{doc_comment[Section.RETURN].datatype}\n\n')
+                            md_doc.new_paragraph((f'`{param.name}`' if param.name else '') +
+                                                 (f': *{doc_comment[Section.RETURN].datatype}*' if doc_comment[Section.RETURN].datatype else '') +
+                                                 '\n\n')
                             description = ':' + (''.join('    ' + line for line in doc_comment[Section.RETURN].description))[1:]
                             md_doc.write(description)
                         if Section.SIGNAL in doc_comment:
                             md_doc.write('\n')
                             md_doc.write('Signals', bold_italics_code="b")
                             for throws in doc_comment[Section.SIGNAL]:
-                                md_doc.new_paragraph(f'`{throws.datatype}`\n\n')
+                                md_doc.new_paragraph(f'`*{throws.datatype}*`\n\n')
                                 description = ':' + (''.join('    ' + line for line in throws.description))[1:]
                                 md_doc.write(description)
                         if Section.EXAMPLE in doc_comment and doc_comment[Section.EXAMPLE]:
@@ -182,8 +180,8 @@ def parse(src_file: str, target_file: str):
                             md_doc.write('\n')
                             md_doc.write('See Also', bold_italics_code="b")
                             for seealso in doc_comment[Section.SEE]:
-                                md_doc.new_paragraph(f'{seealso.ref}')
-                                md_doc.new_line(f': {seealso.description}')
+                                md_doc.new_paragraph(f'{seealso.ref}\n\n')
+                                md_doc.write(f':   {seealso.description}')
                     cur_section = Section.UNKNOWN
                     doc_comment.clear()
                     in_doc_comment = False
