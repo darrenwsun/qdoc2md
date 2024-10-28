@@ -16,7 +16,7 @@ Check if a path is an existing directory.
 
 **Return**
 
-: *boolean*
+*boolean*
 
 :   `1b` if `path` is an existing directory; `0b` otherwise.
 
@@ -53,7 +53,7 @@ Check if a path is an existing file.
 
 **Return**
 
-: *boolean*
+*boolean*
 
 :   `1b` if `path` is an existing file; `0b` otherwise.
 
@@ -90,7 +90,7 @@ Check if a given value is an hsym.
 
 **Return**
 
-: *boolean*
+*boolean*
 
 :   `1b` if `x` is an hsym; `0b` otherwise.
 
@@ -115,6 +115,6 @@ Return the day of the week as an integer, where Monday is 1 and Sunday is 7.
 
 **Return**
 
-: *long*
+*long*
 
 :   The day of the week.

@@ -159,8 +159,8 @@ def parse(src_file: str, target_file: str):
                             param = doc_comment[Section.RETURN]
                             md_doc.write('\n')
                             md_doc.write('Return', bold_italics_code="b")
-                            md_doc.new_paragraph((f'`{param.name}`' if param.name else '') +
-                                                 (f': *{doc_comment[Section.RETURN].datatype}*' if doc_comment[Section.RETURN].datatype else '') +
+                            md_doc.new_paragraph((f'`{param.name}: `' if param.name else '') +
+                                                 (f'*{doc_comment[Section.RETURN].datatype}*' if doc_comment[Section.RETURN].datatype else '') +
                                                  '\n\n')
                             description = ':' + (''.join('    ' + line for line in doc_comment[Section.RETURN].description))[1:]
                             md_doc.write(description)
