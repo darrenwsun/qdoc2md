@@ -168,7 +168,7 @@ def parse(src_file: str, target_file: str):
                             md_doc.write('\n')
                             md_doc.write('Signals', bold_italics_code="b")
                             for throws in doc_comment[Section.SIGNAL]:
-                                md_doc.new_paragraph(f'`*{throws.datatype}*`\n\n')
+                                md_doc.new_paragraph(f'`{throws.datatype}`\n\n')
                                 description = ':' + (''.join('    ' + line for line in throws.description))[1:]
                                 md_doc.write(description)
                         if Section.EXAMPLE in doc_comment and doc_comment[Section.EXAMPLE]:

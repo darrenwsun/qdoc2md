@@ -22,7 +22,7 @@ Check if a path is an existing directory.
 
 **Signals**
 
-`*TypeError*`
+`TypeError`
 
 :   If `path` is not an hsym.
 
@@ -40,11 +40,6 @@ q).sample.isdir `src
 [.sample.isfile](#sampleisfile) 
 
 :   For file check.
-
-
-[.sample.ishsym](#sampleishsym) 
-
-:   For sym check.
 
 ## .sample.isfile
 
@@ -64,7 +59,7 @@ Check if a path is an existing file.
 
 **Signals**
 
-`*TypeError*`
+`TypeError`
 
 :   If `path` is not an hsym.
 
