@@ -103,7 +103,7 @@ def parse(src_file: str, target_file: str):
                     cur_section = Section.SEE
                     if match := re.search(r'(\{.*\} *)(?:(\S.*))?', line, re.DOTALL):
                         seealso = SeeAlso(match.group(1),
-                                          match.group(2) if match.group(2) else '')
+                                          [match.group(2) if match.group(2) else ''])
                         if Section.SEE not in doc_comment:
                             doc_comment[cur_section] = [seealso]
                         else:
@@ -123,8 +123,6 @@ def parse(src_file: str, target_file: str):
                         doc_comment[cur_section][-1].description.append(line)
                     elif cur_section == Section.RETURN:
                         doc_comment[cur_section].description.append(line)
-                    elif cur_section == Section.SEE:
-                        doc_comment[cur_section][-1].description += line
                     else:
                         pass
             elif line.startswith('/'):
@@ -181,7 +179,8 @@ def parse(src_file: str, target_file: str):
                             md_doc.write('See Also', bold_italics_code="b")
                             for seealso in doc_comment[Section.SEE]:
                                 md_doc.new_paragraph(f'{seealso.ref}\n\n')
-                                md_doc.write(f':   {seealso.description}')
+                                description = ':' + (''.join('    ' + line for line in seealso.description))[1:]
+                                md_doc.write(description)
                     cur_section = Section.UNKNOWN
                     doc_comment.clear()
                     in_doc_comment = False

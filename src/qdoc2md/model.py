@@ -31,7 +31,7 @@ class Param:
 @dataclass
 class SeeAlso:
     ref: str
-    description: str
+    description: List[str]
 
 
 @dataclass
