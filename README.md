@@ -23,7 +23,7 @@ qdoc2md --src <your_q_src> --target <output_dir>
    1. `@example`: Example usage of a function. It should appear following the docomment prompt, and the example starts from the next line until the presence of another tag.
    1. `@see {<name>} <description>`: Entry for reference. Preferably `<name>` is a link either via `@link` or a usual Markdown link. `<description>` supports Markdown syntax.   
    1. `@deprecated`: Mark the entity deprecated. It should appear following the docomment prompt.
-   1. `@link <name>`: Add a link to the name. It should be put within a pair of curly braces, e.g. `{@link myfunc}`, the name should be documented in order to resolve to the right url. If the name is not defined in the same script, its enclosing script should be included by `qdoc2md` command in one run.
+   1. `@link <name>`: Add a link to a name which is documented in the same project.
 1. All occurrences of `<description>` above support Markdown syntax.
 1. Use a datatype described below for `<datatype>`.
 

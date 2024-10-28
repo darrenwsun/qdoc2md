@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import List
 
 from mdutils import MdUtils
-from mdutils.tools.Header import Header
 
 from qdoc2md.model import Param, SeeAlso, Document, Section
 
@@ -101,7 +100,7 @@ def parse(src_file: str, target_file: str):
 
                 elif tag == Section.SEE:
                     cur_section = Section.SEE
-                    if match := re.search(r'(\{.*\} *)(?:(\S.*))?', line, re.DOTALL):
+                    if match := re.search(r'\{(.*)\} *(?:(\S.*))?', line, re.DOTALL):
                         seealso = SeeAlso(match.group(1),
                                           [match.group(2) if match.group(2) else ''])
                         if Section.SEE not in doc_comment:
@@ -193,18 +192,18 @@ def resolve_links(docs):
     keyword_to_path = index_by_keyword(docs)
     for doc in docs:
         text: str = doc.md_doc.file_data_text
-        keywords = set(re.findall(f'{{{Section.LINK.value} +(.*?)}}', text))
+        keywords = set(re.findall(f'{Section.LINK.value} +([a-zA-Z0-9_.]+)', text))
         for keyword in keywords:
             if keyword in keyword_to_path:
                 path = keyword_to_path[keyword]
-                text = re.sub(f'{{{Section.LINK.value} +{keyword}}}',
+                text = re.sub(f'{Section.LINK.value} +{keyword}',
                               f'[{keyword}]({"" if path == doc.path else Path(os.path.relpath(path, start=doc.path)).as_posix()}#{keyword.replace(".", "").lower()})',
                               text)
                 # text = text.replace(
                 #     f'{{{Section.LINK.value} {keyword}}}',
                 #     f'[{keyword}]({"" if path == doc.path else Path(os.path.relpath(path, start=doc.path)).as_posix()}#{keyword.replace(".", "").lower()})')
             else:
-                text = re.sub(f'{{{Section.LINK.value} +{keyword}}}',
+                text = re.sub(f'{Section.LINK.value} +{keyword}',
                               keyword,
                               text)
         doc.md_doc.file_data_text = text

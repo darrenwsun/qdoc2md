@@ -37,7 +37,7 @@ q).sample.isdir `src
 
 **See Also**
 
-[.sample.isfile](#sampleisfile) 
+[.sample.isfile](#sampleisfile)
 
 :   For file check.
 
@@ -74,7 +74,7 @@ q).sample.isfile "tests/resources/sample.q"
 
 **See Also**
 
-[.sample.isdir](#sampleisdir) 
+[.sample.isdir](#sampleisdir)
 
 :   For directory check.
 
