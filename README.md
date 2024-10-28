@@ -29,15 +29,22 @@ qdoc2md --src <your_q_src> --target <output_dir>
 
 ## Datatypes
 
-1. Atom datatypes such as `boolean` and `guid`, as shown in [Datatypes](https://code.kx.com/q/ref/#datatypes) on the Reference Card page of q.
+Datatype is free-form text but it is suggested to use the following for consistency.
+
+### Basic Types
+
+1. Atom datatypes such as `boolean` and `guid`, as shown in [Datatypes](https://code.kx.com/q/ref/#datatypes) on the reference page of q.
+1. `number`: alias to either `short`, `int`, `long`, `real` or `float`.
+1. `hsym`: a subclass of `symbol` for file or process symbols
+1. `dict` or `dict(symbol->int)`: a dictionary, with optionally the datatypes of its key and value.
+1. `table` or `table([c1:date]c2:symbol)`: a table, with optionally column names and datatypes
+1. `fn` or `fn(date;long)->date`: a function, with optionally the datatypes of its parameters and return value.
+
+### Compound Types
+
 1. Vector of atom datatypes, e.g. `boolean[]`.
 1. `list` or `list(symbol;long)`: generic list, with optionally datatypes of its elements.
-1. `hsym` or `hsym[]`: a special case of `symbol` or `symbol[]` for file or process symbols.
 1. `string`: an alias to `char[]`.
-1. `::`: generic null, e.g. the return datatype of a function that doesn't return anything
-1. `dict` or `dict(symbol->int)`: a dictionary, with optionally the datatypes of its key and value.
-1. `table` or `table(c1:date;c2:symbol)`: a table, with optionally column names and datatypes
-1. `fn` or `fn(date,long)->date`: a function, with optionally the datatypes of its parameters and return value.
 1. `any`: any datatype.
 
 # Example
