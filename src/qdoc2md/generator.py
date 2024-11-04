@@ -192,11 +192,11 @@ def resolve_links(docs):
     keyword_to_path = index_by_keyword(docs)
     for doc in docs:
         text: str = doc.md_doc.file_data_text
-        keywords = set(re.findall(f'{Section.LINK.value} +([a-zA-Z0-9_.]+)', text))
+        keywords = set(re.findall(rf'{Section.LINK.value} +([a-zA-Z0-9_.]+)\b', text))
         for keyword in keywords:
             if keyword in keyword_to_path:
                 path = keyword_to_path[keyword]
-                text = re.sub(f'{Section.LINK.value} +{keyword}',
+                text = re.sub(rf'{Section.LINK.value} +{keyword}\b',
                               f'[{keyword}]({"" if path == doc.path else Path(os.path.relpath(path, start=doc.path)).as_posix()}#{keyword.replace(".", "").lower()})',
                               text)
                 # text = text.replace(
