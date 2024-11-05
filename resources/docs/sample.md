@@ -103,6 +103,11 @@ q).sample.ishsym `$"/tmp/abc"
 0b
 ```
 
+!!! note
+
+    It doesn't validate if the hsym is valid.
+    Second line of note.
+
 ## .sample.isoweekday
 
 Return the day of the week as an integer, where Monday is 1 and Sunday is 7.

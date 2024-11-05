@@ -10,6 +10,7 @@ class Section(str, Enum):
     DEPRECATED = '@deprecated'
     EXAMPLE = '@example'
     LINK = '@link'
+    NOTE = '@note'
     OVERVIEW = '@overview'
     PARAM = '@param'
     RETURN = '@return'

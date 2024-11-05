@@ -37,6 +37,7 @@
 ///1b
 ///q).sample.ishsym `$"/tmp/abc"
 ///0b
+///@note It doesn't validate if the hsym is valid.
 .sample.ishsym:{[x]
   if[-11h<>type x; :0b];
   $[":"=first string x; 1b; 0b]

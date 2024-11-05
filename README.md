@@ -21,7 +21,8 @@ qdoc2md --src <your_q_src> --target <output_dir>
    1. `@returns [<name>] [{<datatype>}] [description]`: Description of return value of a function, including its optional name, optional datatype, and more details such as what it represents.
    1. `@signal {<error>} [description]`: errors that may be signaled.
    1. `@example`: Example usage of a function. It should appear following the docomment prompt, and the example starts from the next line until the presence of another tag.
-   1. `@see {<name>} <description>`: Entry for reference. Preferably `<name>` is a link either via `@link` or a usual Markdown link. `<description>` supports Markdown syntax.   
+   1. `@see {<name>} <description>`: Entry for reference. Preferably `<name>` is a link either via `@link` or a usual Markdown link. `<description>` supports Markdown syntax.
+   1. `@note <description>`: A note about the object being documented. 
    1. `@deprecated`: Mark the entity deprecated. It should appear following the docomment prompt.
    1. `@link <name>`: Add a link to a name which is documented in the same project.
 1. All occurrences of `<description>` above support Markdown syntax.

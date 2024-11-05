@@ -108,6 +108,13 @@ def parse(src_file: str, target_file: str):
                         else:
                             doc_comment[cur_section].append(seealso)
 
+                elif tag == Section.NOTE:
+                    cur_section = Section.NOTE
+                    if Section.NOTE not in doc_comment:
+                        doc_comment[cur_section] = [[line]]
+                    else:
+                        doc_comment[cur_section].append([line])
+
                 elif cur_section == Section.UNKNOWN:    # Summary line
                     cur_section = Section.SUMMARY
                     if Section.SUMMARY not in doc_comment:
@@ -122,6 +129,8 @@ def parse(src_file: str, target_file: str):
                         doc_comment[cur_section][-1].description.append(line)
                     elif cur_section == Section.RETURN:
                         doc_comment[cur_section].description.append(line)
+                    elif cur_section == Section.NOTE:
+                        doc_comment[cur_section][-1].append(line)
                     else:
                         pass
             elif line.startswith('/'):
@@ -179,6 +188,11 @@ def parse(src_file: str, target_file: str):
                             for seealso in doc_comment[Section.SEE]:
                                 md_doc.new_paragraph(f'{seealso.ref}\n\n')
                                 description = ':' + (''.join('    ' + line for line in seealso.description))[1:]
+                                md_doc.write(description)
+                        if Section.NOTE in doc_comment:
+                            for note in doc_comment[Section.NOTE]:
+                                md_doc.write('\n!!! note\n\n')
+                                description = (''.join('    ' + line for line in note))
                                 md_doc.write(description)
                     cur_section = Section.UNKNOWN
                     doc_comment.clear()
